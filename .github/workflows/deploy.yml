@@ -43,7 +43,15 @@ jobs:
           --zone=asia-south1-a \
           --project=varsha-proud-bauna
 
+      - name: Install GKE auth plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin --quiet
+
       - name: Deploy to GKE
         run: |
+          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+          gcloud container clusters get-credentials kubehealth-cluster \
+          --zone=asia-south1-a \
+          --project=varsha-proud-bauna
           kubectl rollout restart deployment frontend-deployment -n kubehealth
           kubectl rollout restart deployment backend-deployment -n kubehealth
